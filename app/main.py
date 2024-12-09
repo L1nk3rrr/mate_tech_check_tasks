@@ -9,7 +9,7 @@ def load_data(file_path: str) -> list[dict]:
     headers = ['', 'Title', 'Video ID', 'Published At', 'Keyword', 'Likes', 'Comments', 'Views']
     data = []
     with open(file_path, 'r', encoding='utf-8') as file:
-        reader = csv.DictReader(file, fieldnames=headers, delimiter=',')  # Adjust delimiter if needed
+        reader = csv.DictReader(file, fieldnames=headers, delimiter=',')
 
         # Skip the first line if it contains incorrect header info
         next(reader)
@@ -34,14 +34,11 @@ def video_with_highest_views(videos) -> str:
 def average_likes_to_views_ratio(videos: list[dict]) -> float:
     pass
 
-
-def top_videos_by_category(videos: list[dict], categories: list[str]) -> dict[str, list[dict]]:
-    pass
-
-
 def filter_popular_videos(videos: list[dict]) -> list[dict]:
     pass
 
+def top_videos_by_category(videos: list[dict], categories: list[str]) -> dict[str, list[dict]]:
+    pass
 
 def avg_comments_popular_videos(videos: list[dict]) -> float:
     pass
@@ -52,8 +49,7 @@ def video_filter_generator(videos) -> Iterator[tuple[str, int]]:
 
 
 if __name__ == "__main__":
-    file_path = os.path.join(os.path.dirname(__file__), '..', 'data', 'videos-stats.csv')
-    data = load_data(file_path)
+    data = load_data(os.path.join(os.path.dirname(__file__), '..', 'data', 'videos-stats.csv'))
 
     # Task 1.1 Write a function that returns the video with the highest number of views.
     highest_viewed_video = video_with_highest_views(data)
@@ -78,7 +74,7 @@ if __name__ == "__main__":
     avg_comments = avg_comments_popular_videos(data)
     print("Average comments for popular videos:", avg_comments)
 
-    # Task 1.6 Write a generator that yields videos with views greater than 450_000
+    # Task 1.6 Write a generator that yields videos with views greater than 450,000
     filtered_videos = video_filter_generator(data)
     for title, views in filtered_videos:
         print(f"{title}: {views}")
