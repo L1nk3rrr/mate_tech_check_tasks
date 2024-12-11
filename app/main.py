@@ -3,6 +3,7 @@ from collections.abc import Iterator
 from datetime import datetime
 import csv
 import os
+from unicodedata import category
 
 
 def load_data(file_path: str) -> list[dict]:
@@ -27,28 +28,42 @@ def load_data(file_path: str) -> list[dict]:
 
 
 def video_with_highest_views(videos) -> str:
-    pass
+    videos.sort(key=lambda vide0: vide0['views'], reverse=True)
+    return videos[0]['title']
 
 
 # ration = likes / views
 def average_likes_to_views_ratio(videos: list[dict]) -> float:
-    pass
+    return sum([vide0["likes"] / vide0["views"] for vide0 in videos if vide0["views"] != 0]) / len([vide0["likes"] / vide0["views"] for vide0 in videos if vide0["views"] != 0])
 
 
 def filter_popular_videos(videos: list[dict]) -> list[dict]:
-    pass
+    return [vide0 for vide0 in videos if vide0['views'] > 1_000_000 and vide0['likes'] > 500_000]
 
 
 def top_videos_by_category(videos: list[dict], categories: list[str]) -> dict[str, list[dict]] | None:
-    pass
+    result = {}
+
+    for categ0ry in categories:
+
+        list_of_vide0_from_categ0ry = [vide0 for vide0 in videos if vide0['category'] == categ0ry]
+
+        sorted_list_of_vide0_from_categ0ry = sorted(list_of_vide0_from_categ0ry, key=lambda vide0: vide0['views'], reverse=True)
+
+        result[categ0ry] = sorted_list_of_vide0_from_categ0ry[:3]
+
+    return result
 
 
 def avg_comments_popular_videos(videos: list[dict]) -> float:
-    pass
+    return sum([vide0['comment_count'] for vide0 in videos if vide0['views'] > 1_000_000 and vide0['likes'] > 500_000]) / len([vide0['comment_count'] for vide0 in videos if vide0['views'] > 1_000_000 and vide0['likes'] > 500_000])
 
 
 def video_filter_generator(videos) -> Iterator[tuple[str, int]]:
-    pass
+    for vide0 in videos:
+        if vide0['comment_count'] > 500_000:
+            yield vide0
+
 
 
 if __name__ == "__main__":
