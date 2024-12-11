@@ -25,30 +25,43 @@ def load_data(file_path: str) -> list[dict]:
             })
     return data
 
-
 def video_with_highest_views(videos) -> str:
-    pass
-
+    return sorted(videos, key=lambda video: video["views"], reverse=True)[0]["title"]
 
 # ration = likes / views
 def average_likes_to_views_ratio(videos: list[dict]) -> float:
-    pass
+    ration = [video["likes"] / video["views"] for video in videos if video["likes"] != 0 or video["views"] != 0]
+    return sum(ration) / len(ration)
 
-
+# Task 1.3 Filter and return a list of videos with views greater than 1,000,000 and likes greater than 500,000.
 def filter_popular_videos(videos: list[dict]) -> list[dict]:
-    pass
+    return [video for video in videos if video["views"] > 1_000_000 and video["likes"] > 500_000]
 
-
+# Task 1.4 Group videos by category and return the top 3 on each category with views number.
 def top_videos_by_category(videos: list[dict], categories: list[str]) -> dict[str, list[dict]] | None:
-    pass
+    def get_by_categories(videos: list[dict], category: str) -> list:
+        return [video for video in videos if video["category"] == category]
 
+    result = {}
 
+    for category in categories:
+        list_by_category = get_by_categories(videos, category)
+        sorted_list_by_category = sorted(list_by_category, key=lambda video: video["views"], reverse=True)
+        result.update({category: sorted_list_by_category[0:3]})
+
+    return result
+
+# Task 1.5 Find the average number of comments per video for videos with views greater than 1,000,000 and likes greater than 500,000.
 def avg_comments_popular_videos(videos: list[dict]) -> float:
-    pass
+    filtered_videos = filter_popular_videos(videos)
+    commets_from_filtered_videos = [video["comment_count"] for video in filtered_videos]
+    return sum(commets_from_filtered_videos) / len(commets_from_filtered_videos)
 
-
+    # Task 1.6 Write a generator that yields with comments count greater than 450,000
 def video_filter_generator(videos) -> Iterator[tuple[str, int]]:
-    pass
+    for video in videos:
+        if video["comment_count"] > 450000:
+            yield video["title"], video["views"]
 
 
 if __name__ == "__main__":
