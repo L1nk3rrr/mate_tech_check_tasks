@@ -47,7 +47,7 @@ def filter_popular_videos(videos: list[dict]) -> list[dict]:
         if el['views'] > 1_000_000 and el['likes'] > 500_000:
             res.append(el)
     return res
-    ###також можна зробити красиво:
+    ### також можна зробити красиво:
     #return [el for el in videos if el['views'] > 1_000_000 and el['likes'] > 500_000]
 
 
