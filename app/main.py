@@ -1,8 +1,11 @@
 from __future__ import annotations
+
+from cProfile import label
 from collections.abc import Iterator
 from datetime import datetime
 import csv
 import os
+from random import random
 
 
 def load_data(file_path: str) -> list[dict]:
@@ -27,42 +30,74 @@ def load_data(file_path: str) -> list[dict]:
 
 
 def video_with_highest_views(videos) -> str:
-    pass
+    return max(videos, key=lambda video: video.get("views"))["title"]
 
 
 # ration = likes / views
 def average_likes_to_views_ratio(videos: list[dict]) -> float:
-    pass
+    sum_of_likes = 0
+    sum_of_views = 0
+    for video in videos:
+        if video.get("likes") > 0:
+            sum_of_likes += video.get("likes")
+            sum_of_views += video.get("views")
+    return sum_of_likes / sum_of_views
 
 
 def filter_popular_videos(videos: list[dict]) -> list[dict]:
-    pass
+    list_of_popular_videos = list(
+        filter(
+            lambda video: video.get("views") > 1_000_000 and video.get("likes") > 500_000,
+            videos
+        )
+    )
+    return list_of_popular_videos
 
 
 def top_videos_by_category(videos: list[dict], categories: list[str]) -> dict[str, list[dict]] | None:
-    pass
+    category_groups = {}
+
+    for video in videos:
+        category = video["category"]
+        if category in categories:
+            if category not in category_groups:
+                category_groups[category] = []
+            category_groups[category].append(video)
+
+    top_videos = {}
+    for category, vids in category_groups.items():
+        top_videos[category] = sorted(vids, key=lambda v: v["views"], reverse=True)[:3]
+
+    return top_videos
 
 
 def avg_comments_popular_videos(videos: list[dict]) -> float:
-    pass
+    list_of_popular_videos = filter_popular_videos(videos)
+    sum_of_comments = 0
+    for video in list_of_popular_videos:
+        sum_of_comments += video.get("comment_count")
+
+    return sum_of_comments / len(list_of_popular_videos)
 
 
 def video_filter_generator(videos) -> Iterator[tuple[str, int]]:
-    pass
+    for video in videos:
+        if video.get("comment_count", 0) > 450_000:
+            yield video.get("title"), video.get("views")
 
 
 if __name__ == "__main__":
     data = load_data(os.path.join(os.path.dirname(__file__), '..', 'data', 'videos-stats.csv'))
 
-    # Task 1.1 Write a function that returns the video with the highest number of views.
+    # Task 1.1 Write a function that returns the video with the highest number of views. +
     highest_viewed_video = video_with_highest_views(data)
     print(f"Video with the highest views: {highest_viewed_video}")
 
-    # Task 1.2 Calculate the average likes-to-views ratio across all videos.
+    # Task 1.2 Calculate the average likes-to-views ratio across all videos. +
     avg_ratio = average_likes_to_views_ratio(data)
     print(f"Average likes-to-views ratio: {avg_ratio:.4f}")
 
-    # Task 1.3 Filter and return a list of videos with views greater than 1,000,000 and likes greater than 500,000.
+    # Task 1.3 Filter and return a list of videos with views greater than 1,000,000 and likes greater than 500,000. +
     popular_videos = filter_popular_videos(data)
     print("Popular videos:", len(popular_videos))
 
@@ -73,11 +108,11 @@ if __name__ == "__main__":
         for video in vids:
             print(f"  Title: {video['title']}, Views: {video['views']}")
 
-    # Task 1.5 Find the average number of comments per video for videos with views greater than 1,000,000 and likes greater than 500,000.
+    # Task 1.5 Find the average number of comments per video for videos with views greater than 1,000,000 and likes greater than 500,000. +
     avg_comments = avg_comments_popular_videos(data)
     print("Average comments for popular videos:", avg_comments)
 
-    # Task 1.6 Write a generator that yields with comments count greater than 450,000
+    # Task 1.6 Write a generator that yields with comments count greater than 450,000 +
     filtered_videos = video_filter_generator(data)
     for title, views in filtered_videos:
         print(f"{title}: {views}")
