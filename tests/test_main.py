@@ -1,7 +1,7 @@
 import pytest
 from datetime import datetime
 import os
-from app.main import (
+from app.solution import (
     load_data,
     video_with_highest_views,
     average_likes_to_views_ratio,
@@ -36,7 +36,7 @@ def test_filter_popular_videos(test_data):
 
 def test_avg_comments_popular_videos(test_data):
     result = avg_comments_popular_videos(test_data)
-    assert result == pytest.approx(7808.4732)
+    assert result == pytest.approx(92206.98)
 
 def test_top_videos_by_category(test_data):
     categories = ['gaming', 'tech', 'crypto']

@@ -73,11 +73,11 @@ if __name__ == "__main__":
         for video in vids:
             print(f"  Title: {video['title']}, Views: {video['views']}")
 
-    # Task 1.5 Find the average number of comments per video for videos with at least 10,000 views.
+    # Task 1.5 Find the average number of comments per video for videos with views greater than 1,000,000 and likes greater than 500,000.
     avg_comments = avg_comments_popular_videos(data)
     print("Average comments for popular videos:", avg_comments)
 
-    # Task 1.6 Write a generator that yields comment count with views greater than 450,000
+    # Task 1.6 Write a generator that yields with comments count greater than 450,000
     filtered_videos = video_filter_generator(data)
     for title, views in filtered_videos:
         print(f"{title}: {views}")
