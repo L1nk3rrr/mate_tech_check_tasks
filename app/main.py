@@ -27,34 +27,56 @@ def load_data(file_path: str) -> list[dict]:
 
 
 def video_with_highest_views(videos: list[dict]) -> str:
-    video_dict = max(videos, key=lambda video: video['Views'])
-    return video_dict['Title']
-
+    return max(videos, key=lambda video: video['views'])['title']
+#  знайшов лекший варіант + основна проблема що треба писати з маленької перегляди та тайтл)))))))
 
 # ration = likes / views for 1 video!
 # average ratio it's sum of all rations / count of videos
 def average_likes_to_views_ratio(videos: list[dict]) -> float:
+    total = 0
+    total_vid = 0
     for video in videos:
-        average = video['likes'] // video['views'] if video['views'] else 0
-    return average
+        if video['views'] > 0:
+            total += video['likes'] / video['views']
+            total_vid += 1
+    return total / total_vid if total_vid > 0 else 0
+#  тут я на тех-чеку не зрозумів самого завдання тут треба знайти сер співідношення для відео ДЕ Є ПЕРЕГЛЯДИ
 
 def filter_popular_videos(videos: list[dict]) -> list[dict]:
     result = []
     for video in videos:
-        if video['Views'] >= 1000_000 and video['Likes'] >= 500_000:
+        if video['views'] > 1000_000 and video['likes'] >= 500_000:
             result.append(video)
     return result
+#  тут основна проблема була як і в першому Views i Likes з маленької)
 
 def top_videos_by_category(videos: list[dict], categories: list[str]) -> dict[str, list[dict]] | None:
-    pass
+    sort_by_category = {}
+    for video in videos:
+        if video['category'] in categories:
+            if video['category'] not in sort_by_category:
+                sort_by_category[video['category']] = []
+            sort_by_category[video['category']].append(video)
+    #  спочатку групуєм відоси по категоріям
 
+    top_videos_by_category = {}
+    for category, category_videos  in sort_by_category.items():
+        sorted_videos = sorted(category_videos, key=lambda x: x['views'], reverse=True)
+        top_videos_by_category[category] = sorted_videos[:3]
+    return top_videos_by_category
+    #  потім сортуєм у кожній категорії та вибераєм перші три (це найбільші)
+    #  тому, що ключ за сортуванням: key=lambda x: x['views']
 
 def avg_comments_popular_videos(videos: list[dict]) -> float:
-    pass
-
+    cool_video = [video for video in videos if video['views'] >= 1000_000 and video['likes'] >= 500_000]
+    sum_comments = sum(video['comment_count'] for video in cool_video)
+    avg_comments = sum_comments / len(cool_video)
+    return avg_comments
 
 def video_filter_generator(videos: list[dict]) -> Iterator[tuple[str, int]]:
-    pass
+    for vi in videos:
+        if vi['comment_count'] > 450_000:
+            yield vi['title'], vi['comment_count']
 
 
 if __name__ == "__main__":
