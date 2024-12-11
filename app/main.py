@@ -34,12 +34,13 @@ def video_with_highest_views(videos: list[dict]) -> str:
 # ration = likes / views for 1 video!
 # average ratio it's sum of all rations / count of videos
 def average_likes_to_views_ratio(videos: list[dict]) -> float:
-    total_views = sum(video['views'] for video in videos) # Обчислюємо загальну кількість переглядів
-    total_likes = sum(video['likes'] for video in videos) # Обчислюємо загальну кількість лайків
-    if total_views == 0: # Перевіряємо загальну кількість переглядів
-        return 0 # Повертаємо якщо немає переглядів
-    return total_likes / total_views # Повертаємо середнє відношення лайків до переглядів
-
+    ratios = []
+    for vid in videos:
+        likes = vid.get("likes", 0)
+        views = vid.get("views", 0)
+        if views != 0:
+            ratios.append(likes / views)
+    return sum(ratios) / len(ratios)
 
 def filter_popular_videos(videos: list[dict]) -> list[dict]:
     # Повертаємо список відео
@@ -68,7 +69,7 @@ def avg_comments_popular_videos(videos: list[dict]) -> float:
 def video_filter_generator(videos: list[dict]) -> Iterator[tuple[str, int]]:
     for video in videos: # перебираємо кожне відео
         if video['comment_count'] > 450_000: # умова
-            yield (video['title'], video['views']) # генеруємо назву відео і кількість переглядів
+            yield (video['title'], video['comment_count']) # генеруємо назву відео і кількість переглядів
 
 if __name__ == "__main__":
     data = load_data(os.path.join(os.path.dirname(__file__), '..', 'data', 'videos-stats.csv'))
