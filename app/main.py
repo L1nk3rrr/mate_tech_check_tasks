@@ -73,7 +73,7 @@ def top_videos_by_category(videos: list[dict], categories: list[str]) -> dict[st
 
 
 def avg_comments_popular_videos(videos: list[dict]) -> float:
-    popular_videos = filter_popular_videos(data)
+    popular_videos = filter_popular_videos(videos)
     return sum(
         video.get("comment_count")
         for video in popular_videos
