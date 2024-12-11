@@ -1,7 +1,7 @@
 import pytest
 from datetime import datetime
 import os
-from app.main import (
+from app.solution import (
     load_data,
     video_with_highest_views,
     average_likes_to_views_ratio,
@@ -54,4 +54,8 @@ def test_top_videos_by_category(test_data):
 
 def test_video_filter_generator(test_data):
     result = list(video_filter_generator(test_data))
-    assert len(result) == 3
+    assert result == [
+        ('El Chombo - Dame Tu Cosita feat. Cutty Ranks (Official Video) [Ultra Music]', 732818),
+        ('$456,000 Squid Game In Real Life!', 611757),
+        ('I Opened A Restaurant That Pays You To Eat At It', 728774)
+    ]

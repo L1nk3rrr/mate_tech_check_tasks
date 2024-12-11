@@ -30,7 +30,8 @@ def video_with_highest_views(videos: list[dict]) -> str:
     pass
 
 
-# ration = likes / views
+# ration = likes / views for 1 video!
+# average ratio it's sum of all rations / count of videos
 def average_likes_to_views_ratio(videos: list[dict]) -> float:
     pass
 
@@ -77,7 +78,7 @@ if __name__ == "__main__":
     avg_comments = avg_comments_popular_videos(data)
     print("Average comments for popular videos:", avg_comments)
 
-    # Task 1.6 Write a generator that yields with comments count greater than 450,000
+    # Task 1.6 Write a generator that yields videos with comment count greater than 450,000 (must return title and views)
     filtered_videos = video_filter_generator(data)
     for title, views in filtered_videos:
         print(f"{title}: {views}")
