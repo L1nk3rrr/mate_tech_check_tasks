@@ -1,7 +1,7 @@
 import pytest
 from datetime import datetime
 import os
-from app.solution import (
+from app.main import (
     load_data,
     video_with_highest_views,
     average_likes_to_views_ratio,
