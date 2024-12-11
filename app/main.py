@@ -35,14 +35,18 @@ def video_with_highest_views(videos) -> str:
 
 # ration = likes / views
 def average_likes_to_views_ratio(videos: list[dict]) -> float:
-    sum_of_likes = 0
-    sum_of_views = 0
-    for video in videos:
-        if video.get("likes") > 0:
-            sum_of_likes += video.get("likes")
-            sum_of_views += video.get("views")
+    ratio = []
 
-    return sum_of_likes / sum_of_views
+    for video in videos:
+        likes = float(video.get("likes", 0))
+        views = float(video.get("views", 0))
+        if views > 0:
+            ratio.append(likes / views)
+
+    if not ratio:  # Если список пуст, возвращаем 0
+        return 0.0
+
+    return round(sum(ratio) / len(ratio), 7)
 
 
 def filter_popular_videos(videos: list[dict]) -> list[dict]:
