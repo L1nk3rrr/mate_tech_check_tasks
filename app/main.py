@@ -49,6 +49,7 @@ def filter_popular_videos(videos: list[dict]) -> list[dict]:
         video for video in videos
         if video.get("views") > 1000000 and video.get("likes") > 500000
     ]
+    return popular_videos
 
 
 def top_videos_by_category(videos: list[dict], categories: list[str]) -> dict[str, list[dict]] | None:
@@ -58,8 +59,8 @@ def top_videos_by_category(videos: list[dict], categories: list[str]) -> dict[st
             video for video in videos
             if video["category"] == category
         ]
-        top_videos[category] = sorted(video_category, key=lambda video: video["views"], reverse=True)
-
+        top_videos[category] = sorted(video_category, key=lambda video: video["views"], reverse=True)[:3]
+    return top_videos
 
 def avg_comments_popular_videos(videos: list[dict]) -> float:
     popular_videos = [video for video in videos if video.get("views") > 1000000 and video.get("likes") > 500000]
@@ -70,7 +71,9 @@ def avg_comments_popular_videos(videos: list[dict]) -> float:
 
 
 def video_filter_generator(videos: list[dict]) -> Iterator[tuple[str, int]]:
-    pass
+    for video in videos:
+        if video.get("comment_count", 0) > 450000:
+            yield video["title"].strip(), video["views"]
 
 
 if __name__ == "__main__":
