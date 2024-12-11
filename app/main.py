@@ -27,28 +27,33 @@ def load_data(file_path: str) -> list[dict]:
 
 
 def video_with_highest_views(videos) -> str:
-    pass
+    return max(videos, key=lambda item: item['views'])['title']
 
-
-# ration = likes / views
 def average_likes_to_views_ratio(videos: list[dict]) -> float:
-    pass
-
+    ratio = [vid['likes'] / vid['views'] for vid in videos if vid["views"] > 0]
+    return sum(ratio) / len(ratio)
 
 def filter_popular_videos(videos: list[dict]) -> list[dict]:
-    pass
-
+    return [vid for vid in videos if vid["views"] > 1_000_000 and vid["likes"] > 500_000]
 
 def top_videos_by_category(videos: list[dict], categories: list[str]) -> dict[str, list[dict]] | None:
-    pass
-
+    result = dict()
+    for cat in categories:
+        filtered_videos = [vid for vid in videos if vid['category'] == cat]
+        sorted_videos = sorted(filtered_videos, key=lambda item: item['views'], reverse=True)
+        result[cat] = sorted_videos[:3]
+    return result
 
 def avg_comments_popular_videos(videos: list[dict]) -> float:
-    pass
+    popular_videos = filter_popular_videos(videos)
+    comments = [vid['comment_count'] for vid in popular_videos]
+    return sum(comments) / len(comments)
 
 
 def video_filter_generator(videos) -> Iterator[tuple[str, int]]:
-    pass
+    for vid in videos:
+        if vid['comment_count'] > 450_000:
+            yield vid['title'], vid['views']
 
 
 if __name__ == "__main__":
