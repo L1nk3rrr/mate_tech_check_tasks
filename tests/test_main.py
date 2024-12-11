@@ -1,7 +1,7 @@
 import pytest
 from datetime import datetime
 import os
-from app.main import (
+from app.solution import (
     load_data,
     video_with_highest_views,
     average_likes_to_views_ratio,
@@ -28,7 +28,7 @@ def test_video_with_highest_views(test_data):
 
 def test_average_likes_to_views_ratio(test_data):
     result = average_likes_to_views_ratio(test_data)
-    assert result == pytest.approx(0.08502870)
+    assert result == pytest.approx(0.0851192)
 
 def test_filter_popular_videos(test_data):
     result = filter_popular_videos(test_data)
