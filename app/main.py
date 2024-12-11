@@ -26,29 +26,53 @@ def load_data(file_path: str) -> list[dict]:
     return data
 
 
-def video_with_highest_views(videos: list[dict]) -> str:
-    pass
+def video_with_highest_views(videos) -> str:
+    highest_views = max(videos, key = lambda video: video["views"])
+    return highest_views["title"]
 
 
 # ration = likes / views
 def average_likes_to_views_ratio(videos: list[dict]) -> float:
-    pass
+    views_ratio = 0
+    count_videos = 0
+
+    for video in videos:
+        if video['views'] > 0:
+            views_ratio += video['likes'] / video['views']
+            count_videos += 1
+
+    return views_ratio / count_videos
 
 
 def filter_popular_videos(videos: list[dict]) -> list[dict]:
-    pass
+    return [video for video in videos if video["views"] > 1_000_000 and video["likes"]> 500_000]
 
 
 def top_videos_by_category(videos: list[dict], categories: list[str]) -> dict[str, list[dict]] | None:
-    pass
+    category_vid = {}
+    
+    for video in videos:
+        if video["category"] in categories:
+            if video["category"] not in category_vid:
+                category_vid[video["category"]] = []
+            category_vid[video["category"]].append(video)
+    
+    for category in category_vid:
+        category_vid[category].sort(key=lambda x: x['views'], reverse=True)
+        category_vid[category] = category_vid[category][:3]
 
+    return category_vid
 
 def avg_comments_popular_videos(videos: list[dict]) -> float:
-    pass
+    videos_total = filter_popular_videos(videos)
+    comments_total = sum(video["comment_count"] for video in videos_total)
+    return comments_total / len(videos_total)
 
 
-def video_filter_generator(videos: list[dict]) -> Iterator[tuple[str, int]]:
-    pass
+def video_filter_generator(videos) -> Iterator[tuple[str, int]]:
+    for video in videos:
+        if video["comment_count"] > 450_000:
+            yield video["title"], video["views"]
 
 
 if __name__ == "__main__":
