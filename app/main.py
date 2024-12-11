@@ -27,7 +27,6 @@ def load_data(file_path: str) -> list[dict]:
 
 
 def video_with_highest_views(videos: list[dict]) -> str:
-
     return str(
         sorted(videos,
                key=lambda vid: vid.get("views")
@@ -82,10 +81,9 @@ def avg_comments_popular_videos(videos: list[dict]) -> float:
 
 def video_filter_generator(videos: list[dict]) -> Iterator[tuple[str, int]]:
     # comments greater than 450,000
-    return (
-        video.get("title"), video.get("views")
-        for video in videos if video.get("comment_count")
-    )
+    for video in videos:
+        if video.get("comment_count") > 450_000:
+            yield (video.get("title"), video.get("comment_count"))
 
 
 if __name__ == "__main__":
