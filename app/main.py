@@ -26,30 +26,50 @@ def load_data(file_path: str) -> list[dict]:
     return data
 
 
-def video_with_highest_views(videos: list[dict]) -> str:
-    pass
+def video_with_highest_views(videos) -> str:
+    res_data = sorted(videos, key=lambda x: x["views"], reverse=True)
+    return res_data[0]['title']
 
 
-# ration = likes / views for 1 video!
-# average ratio it's sum of all rations / count of videos
 def average_likes_to_views_ratio(videos: list[dict]) -> float:
-    pass
+    total_sum = 0
+    counter = 0
+    for el in videos:
+        if el.get('views') != 0:
+            total_sum += el.get('likes') / el.get('views')
+            counter += 1
+    return total_sum / counter
 
 
 def filter_popular_videos(videos: list[dict]) -> list[dict]:
-    pass
+    res = []
+    for el in videos:
+        if el['views'] > 1_000_000 and el['likes'] > 500_000:
+            res.append(el)
+    return res
+    ### також можна зробити красиво:
+    #return [el for el in videos if el['views'] > 1_000_000 and el['likes'] > 500_000]
 
 
 def top_videos_by_category(videos: list[dict], categories: list[str]) -> dict[str, list[dict]] | None:
-    pass
+    resulted_cat = {}
+    for cat in categories:
+        category = [el for el in videos if el["category"] == cat]
+        resulted_cat[cat] = sorted(category, key=lambda x: x["views"], reverse=True)[:3]
+    return resulted_cat
 
 
 def avg_comments_popular_videos(videos: list[dict]) -> float:
-    pass
+    popular = filter_popular_videos(videos)
+    return sum([video["comment_count"] for video in popular]) / len(popular)
 
 
-def video_filter_generator(videos: list[dict]) -> Iterator[tuple[str, int]]:
-    pass
+def video_filter_generator(videos) -> Iterator[tuple[str, int]]:
+    for el in videos:
+        if el['comment_count'] > 450_000:
+            yield el["title"], el["views"]
+    ### інший варіант створення генератора через вираз, але нащо тоді для цього окрема функція...
+    #return ((el["title"], el["views"]) for el in videos if el['comment_count'] > 450_000)
 
 
 if __name__ == "__main__":
@@ -78,7 +98,7 @@ if __name__ == "__main__":
     avg_comments = avg_comments_popular_videos(data)
     print("Average comments for popular videos:", avg_comments)
 
-    # Task 1.6 Write a generator that yields videos with comment count greater than 450,000 (must return title and views)
+    # Task 1.6 Write a generator that yields with comments count greater than 450,000
     filtered_videos = video_filter_generator(data)
     for title, views in filtered_videos:
         print(f"{title}: {views}")
