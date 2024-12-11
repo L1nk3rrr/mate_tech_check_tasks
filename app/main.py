@@ -11,7 +11,6 @@ def load_data(file_path: str) -> list[dict]:
     with open(file_path, 'r', encoding='utf-8') as file:
         reader = csv.DictReader(file, fieldnames=headers, delimiter=',')
 
-        # Skip the first line if it contains incorrect header info
         next(reader)
 
         for row in reader:
