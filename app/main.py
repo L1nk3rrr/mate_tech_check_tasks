@@ -41,6 +41,7 @@ def average_likes_to_views_ratio(videos: list[dict]) -> float:
         if video.get("likes") > 0:
             sum_of_likes += video.get("likes")
             sum_of_views += video.get("views")
+
     return sum_of_likes / sum_of_views
 
 
@@ -51,6 +52,7 @@ def filter_popular_videos(videos: list[dict]) -> list[dict]:
             videos
         )
     )
+
     return list_of_popular_videos
 
 
@@ -65,8 +67,10 @@ def top_videos_by_category(videos: list[dict], categories: list[str]) -> dict[st
             category_groups[category].append(video)
 
     top_videos = {}
-    for category, vids in category_groups.items():
-        top_videos[category] = sorted(vids, key=lambda v: v["views"], reverse=True)[:3]
+    for category, category_group_videos in category_groups.items():
+        top_videos[category] = sorted(category_group_videos,
+            key=lambda vid: vid["views"],
+            reverse=True)[:3]
 
     return top_videos
 
