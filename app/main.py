@@ -26,7 +26,7 @@ def load_data(file_path: str) -> list[dict]:
     return data
 
 
-def video_with_highest_views(videos) -> str:
+def video_with_highest_views(videos: list[dict]) -> str:
     pass
 
 
@@ -47,7 +47,7 @@ def avg_comments_popular_videos(videos: list[dict]) -> float:
     pass
 
 
-def video_filter_generator(videos) -> Iterator[tuple[str, int]]:
+def video_filter_generator(videos: list[dict]) -> Iterator[tuple[str, int]]:
     pass
 
 
