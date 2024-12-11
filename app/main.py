@@ -27,30 +27,49 @@ def load_data(file_path: str) -> list[dict]:
 
 
 def video_with_highest_views(videos: list[dict]) -> str:
-    pass
+    highest_views = max(videos, key=lambda x: x['views']) # Знаходимо відео з найбільшою кількістью переглядів
+    return highest_views['title'] #Повертаємо назву відео
 
 
 # ration = likes / views for 1 video!
 # average ratio it's sum of all rations / count of videos
 def average_likes_to_views_ratio(videos: list[dict]) -> float:
-    pass
-
+    ratios = []
+    for vid in videos:
+        likes = vid.get("likes", 0)
+        views = vid.get("views", 0)
+        if views != 0:
+            ratios.append(likes / views)
+    return sum(ratios) / len(ratios)
 
 def filter_popular_videos(videos: list[dict]) -> list[dict]:
-    pass
-
+    # Повертаємо список відео
+    return [video for video in videos if video['views'] > 1_000_000 and video['likes'] > 500_000]
 
 def top_videos_by_category(videos: list[dict], categories: list[str]) -> dict[str, list[dict]] | None:
-    pass
+    #створюємо словник для категорій
+    category_dict = {category:[] for category in categories}
+    for video in videos:  # перебераємо відео
+        if video['category'] in category_dict: #перевіряємо чи відео входить у категорії
+            category_dict[video['category']].append(video) # Додаємо відео в потрібну категорію
+    for category in categories: # перевіряємо кожну категорію
+        category_dict[category] = sorted(category_dict[category], key=lambda x: x['views'], reverse=True)[:3]
+        # сортуємо за кількістью переглядіів топ 3
+    return category_dict # ну і повертаємо словник
 
 
 def avg_comments_popular_videos(videos: list[dict]) -> float:
-    pass
+    popular_videos = filter_popular_videos(videos) # отримуємо список популярних відео
+    if not popular_videos: # перевіряємо чи список не пустий
+        return 0 # вертаємо 0 якщо порожній
+    total_comments = sum(video['comment_count'] for video in popular_videos) # загальна кількість коментарів
+    return total_comments / len(popular_videos) # вертаємо середню кількість коментарів
 
 
 def video_filter_generator(videos: list[dict]) -> Iterator[tuple[str, int]]:
-    pass
-
+    for video in videos: # перебираємо кожне відео
+        if video['comment_count'] > 450_000: # умова
+            yield (video['title'], video['comment_count']) # генеруємо назву відео і кількість переглядів
 
 if __name__ == "__main__":
     data = load_data(os.path.join(os.path.dirname(__file__), '..', 'data', 'videos-stats.csv'))
