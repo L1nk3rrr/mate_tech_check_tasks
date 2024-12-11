@@ -78,7 +78,7 @@ if __name__ == "__main__":
     avg_comments = avg_comments_popular_videos(data)
     print("Average comments for popular videos:", avg_comments)
 
-    # Task 1.6 Write a generator that yields videos with comment count greater than 450,000 (must return title and views)
+    # Task 1.6 Write a generator that yields videos with comment count greater than 450,000 (must return title and comment count)
     filtered_videos = video_filter_generator(data)
     for title, views in filtered_videos:
         print(f"{title}: {views}")
