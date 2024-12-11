@@ -27,18 +27,23 @@ def load_data(file_path: str) -> list[dict]:
 
 
 def video_with_highest_views(videos: list[dict]) -> str:
-    pass
+    video_dict = max(videos, key=lambda video: video['Views'])
+    return video_dict['Title']
 
 
 # ration = likes / views for 1 video!
 # average ratio it's sum of all rations / count of videos
 def average_likes_to_views_ratio(videos: list[dict]) -> float:
-    pass
-
+    for video in videos:
+        average = video['likes'] // video['views'] if video['views'] else 0
+    return average
 
 def filter_popular_videos(videos: list[dict]) -> list[dict]:
-    pass
-
+    result = []
+    for video in videos:
+        if video['Views'] >= 1000_000 and video['Likes'] >= 500_000:
+            result.append(video)
+    return result
 
 def top_videos_by_category(videos: list[dict], categories: list[str]) -> dict[str, list[dict]] | None:
     pass
