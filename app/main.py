@@ -6,7 +6,16 @@ import os
 
 
 def load_data(file_path: str) -> list[dict]:
-    headers = ['', 'Title', 'Video ID', 'Published At', 'Keyword', 'Likes', 'Comments', 'Views']
+    headers = [
+        '',
+        'Title',
+        'Video ID',
+        'Published At',
+        'Keyword',
+        'Likes',
+        'Comments',
+        'Views'
+    ]
     data = []
     with open(file_path, 'r', encoding='utf-8') as file:
         reader = csv.DictReader(file, fieldnames=headers, delimiter=',')
@@ -16,7 +25,9 @@ def load_data(file_path: str) -> list[dict]:
 
         for row in reader:
             data.append({
-                'published_at': datetime.strptime(row['Published At'], '%Y-%m-%d').date(),
+                'published_at': (
+                    datetime.strptime(row['Published At'], '%Y-%m-%d').date()
+                ),
                 'title': row['Title'],
                 'category': row['Keyword'],
                 'views': int(row['Views'].rstrip('.0') or 0),
@@ -54,16 +65,19 @@ def filter_popular_videos(videos: list[dict]) -> list[dict]:
     return result
 
 
-def top_videos_by_category(videos: list[dict], categories: list[str]) -> dict[str, list[dict]] | None:
+def top_videos_by_category(
+        videos: list[dict],
+        categories: list[str]
+) -> dict[str, list[dict]] | None:
     highest_views_by_category = {}
-    # Group videos by category
-    # and return the top 3 on each category with views number
+
     for category in categories:
+        videos_by_category = [
+            video for video in videos
+            if video.get("category") == category
+        ]
         sorted_videos_by_category = sorted(
-            [
-                video for video in videos
-                if video.get("category") == category
-            ],
+            videos_by_category,
             key= lambda vid: vid.get("views"),
             reverse=True
         )
