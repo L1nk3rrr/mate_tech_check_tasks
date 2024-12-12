@@ -27,29 +27,53 @@ def load_data(file_path: str) -> list[dict]:
 
 
 def video_with_highest_views(videos: list[dict]) -> str:
-    pass
+
+    most_viewed_video = videos[0]
+
+    for video in videos:
+        if video.get("views") > most_viewed_video.get("views"):
+            most_viewed_video = video
+
+    return most_viewed_video.get("title")
 
 
-# ration = likes / views for 1 video!
-# average ratio it's sum of all rations / count of videos
+# ration = likes / views
 def average_likes_to_views_ratio(videos: list[dict]) -> float:
-    pass
+
+    list_of_ratio = [video.get("likes") / video.get("views") for video in videos if video.get("views")]
+
+    return sum(list_of_ratio) / len(list_of_ratio)
 
 
 def filter_popular_videos(videos: list[dict]) -> list[dict]:
-    pass
-
+    return [video for video in videos if video.get("views") > 1000000 and video.get("likes") > 500000]
 
 def top_videos_by_category(videos: list[dict], categories: list[str]) -> dict[str, list[dict]] | None:
-    pass
 
+    dict_of_category_and_most_viewed = {}
+    list_of_videos_in_category = []
+
+    for category in categories:
+        for video in videos:
+            if video.get("category") == category:
+                list_of_videos_in_category.append(video)
+        list_of_most_viewed = sorted(list_of_videos_in_category, key=lambda view: view["views"], reverse=True)[:3]
+        dict_of_category_and_most_viewed.update({category: list_of_most_viewed})
+
+    return dict_of_category_and_most_viewed
 
 def avg_comments_popular_videos(videos: list[dict]) -> float:
-    pass
+    list_of_right_videos = filter_popular_videos(videos)
+    list_of_comments = [video.get("comment_count") for video in list_of_right_videos]
+
+    return sum(list_of_comments) / len(list_of_comments)
 
 
 def video_filter_generator(videos: list[dict]) -> Iterator[tuple[str, int]]:
-    pass
+
+     for video in videos:
+        if video.get("comment_count") > 450000:
+            yield video.get("title"), video.get("comment_count")
 
 
 if __name__ == "__main__":
