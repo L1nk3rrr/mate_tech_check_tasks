@@ -67,8 +67,8 @@ def avg_comments_popular_videos(videos: list[dict]) -> float:
 
 def video_filter_generator(videos) -> Iterator[tuple[str, int]]:
     for movie in videos:
-        if movie.get("comment_count", 0) > 450_000:
-            yield (f"{movie.get("title", "")}: {movie.get("views", 0)}",)
+        if movie.get("comment_count") > 450_000:
+            yield movie.get("title"), movie.get("comment_count")
 
 
 if __name__ == "__main__":
