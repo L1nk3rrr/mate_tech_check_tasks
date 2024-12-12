@@ -27,29 +27,44 @@ def load_data(file_path: str) -> list[dict]:
 
 
 def video_with_highest_views(videos: list[dict]) -> str:
-    pass
+    return sorted(videos, key=lambda x: x["views"])[-1]["title"]
 
 
 # ration = likes / views for 1 video!
 # average ratio it's sum of all rations / count of videos
 def average_likes_to_views_ratio(videos: list[dict]) -> float:
-    pass
+    return (sum([video["likes"] / video["views"] for video in videos if video["views"] != 0])
+            / len([video for video in videos if video["views"] != 0]))
 
 
 def filter_popular_videos(videos: list[dict]) -> list[dict]:
-    pass
+    return [video for video in videos if video["views"] > 1_000_000 and video["likes"] > 500_000]
 
 
 def top_videos_by_category(videos: list[dict], categories: list[str]) -> dict[str, list[dict]] | None:
-    pass
+    result_dict = {}
+    for category in categories:
+        result_dict[category] = sorted(
+            [video for video in videos if video["category"] == category],
+            key=lambda x: x["views"],
+            reverse=True
+        )[:3]
+    return result_dict
 
 
 def avg_comments_popular_videos(videos: list[dict]) -> float:
-    pass
+    popular_videos = filter_popular_videos(videos)
+    return sum([video["comment_count"] for video in popular_videos]) / len(popular_videos)
 
 
 def video_filter_generator(videos: list[dict]) -> Iterator[tuple[str, int]]:
-    pass
+    for video in videos:
+        if video["comment_count"] > 450_000:
+            yield video["title"], video["views"]
+
+    # Пробував ще таким чином:
+    # gen = ((video["title"], video["views"]) for video in videos if video["comment_count"] > 450_000)
+    # return gen
 
 
 if __name__ == "__main__":
@@ -78,7 +93,7 @@ if __name__ == "__main__":
     avg_comments = avg_comments_popular_videos(data)
     print("Average comments for popular videos:", avg_comments)
 
-    # Task 1.6 Write a generator that yields videos with comment count greater than 450,000 (must return title and comment count)
+    # Task 1.6 Write a generator that yields videos with comment count greater than 450,000 (must return title and views)
     filtered_videos = video_filter_generator(data)
     for title, views in filtered_videos:
         print(f"{title}: {views}")
