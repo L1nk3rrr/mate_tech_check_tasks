@@ -1,5 +1,7 @@
+import csv
 from typing import Iterator
-import datetime
+from datetime import datetime
+
 
 def load_data(file_path: str) -> list[dict]:
     headers = ['', 'Title', 'Video ID', 'Published At', 'Keyword', 'Likes', 'Comments', 'Views']
@@ -21,7 +23,7 @@ def load_data(file_path: str) -> list[dict]:
             })
     return data
 
-data = load_data(os.path.join(os.path.dirname(__file__), '..', 'data', 'videos-stats.csv'))
+#data = load_data(os.path.join(os.path.dirname(__file__), '..', 'data', 'videos-stats.csv'))
 
 def video_with_highest_views(videos: list[dict]) -> str:
     # Task 1.1 Write a function that returns the video with the highest number of views.
@@ -33,7 +35,7 @@ def video_with_highest_views(videos: list[dict]) -> str:
             max_views = video['views']
             max_viewed_video_title = video['title']
 
-    return f"Video with the highest views: {max_viewed_video_title}"
+    return max_viewed_video_title
 
 
 # ration = likes / views for 1 video!
@@ -74,8 +76,23 @@ def top_videos_by_category(videos: list[dict], categories: list[str]) -> dict[st
             category_groups[category].append(video)
 
     for category in category_groups:
-        category_groups[category].sort(key=video['views'], reverse=True)
-        category_groups[category] = category_groups[category][:3]
+        top_videos = []
+        videos_in_category = category_groups[category]
+
+        for _ in range(min(3, len(videos_in_category))):
+            max_views_video = None
+            max_views = -1
+
+            for video in videos_in_category:
+                if video['views'] > max_views:
+                    max_views = video['views']
+                    max_views_video = video
+
+            if max_views_video:
+                top_videos.append(max_views_video)
+                videos_in_category.remove(max_views_video)
+
+        category_groups[category] = top_videos
 
     return category_groups
 
@@ -97,7 +114,7 @@ def video_filter_generator(videos: list[dict]) -> Iterator[tuple[str, int]]:
     # Task 1.6 Write a generator that yields videos with comment count greater than 450,000 (must return title and views)
     for video in videos:
         if video['comment_count'] > 450_000:
-            yield video['title'], video['views']
+            yield video['title'], video['comment_count']
 
 
 if __name__ == "__main__":
