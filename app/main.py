@@ -4,7 +4,8 @@ from datetime import datetime
 
 
 def load_data(file_path: str) -> list[dict]:
-    headers = ['', 'Title', 'Video ID', 'Published At', 'Keyword', 'Likes', 'Comments', 'Views']
+    headers = ['', 'Title', 'Video ID', 'Published At',
+               'Keyword', 'Likes', 'Comments', 'Views']
     data = []
     with open(file_path, 'r', encoding='utf-8') as file:
         reader = csv.DictReader(file, fieldnames=headers, delimiter=',')
@@ -14,7 +15,8 @@ def load_data(file_path: str) -> list[dict]:
 
         for row in reader:
             data.append({
-                'published_at': datetime.strptime(row['Published At'], '%Y-%m-%d').date(),
+                'published_at': datetime.strptime(
+                    row['Published At'], '%Y-%m-%d').date(),
                 'title': row['Title'],
                 'category': row['Keyword'],
                 'views': int(row['Views'].rstrip('.0') or 0),
@@ -23,10 +25,10 @@ def load_data(file_path: str) -> list[dict]:
             })
     return data
 
-#data = load_data(os.path.join(os.path.dirname(__file__), '..', 'data', 'videos-stats.csv'))
 
 def video_with_highest_views(videos: list[dict]) -> str:
-    # Task 1.1 Write a function that returns the video with the highest number of views.
+    # Task 1.1 Write a function that returns
+    # the video with the highest number of views.
     max_views = -1
     max_viewed_video_title = ""
 
@@ -55,7 +57,8 @@ def average_likes_to_views_ratio(videos: list[dict]) -> float:
 
 
 def filter_popular_videos(videos: list[dict]) -> list[dict]:
-    # Task 1.3 Filter and return a list of videos with views greater than 1,000,000 and likes greater than 500,000.
+    # Task 1.3 Filter and return a list of videos with views greater
+    # than 1,000,000 and likes greater than 500,000.
 
     popular_videos = []
 
@@ -66,8 +69,11 @@ def filter_popular_videos(videos: list[dict]) -> list[dict]:
     return popular_videos
 
 
-def top_videos_by_category(videos: list[dict], categories: list[str]) -> dict[str, list[dict]] | None:
-    # Task 1.4 Group videos by category and return the top 3 on each category with views number.
+def top_videos_by_category(
+        videos: list[dict],
+        categories: list[str]) -> dict[str, list[dict]] | None:
+    # Task 1.4 Group videos by category and return the top 3
+    # on each category with views number.
     category_groups = {category: [] for category in categories}
 
     for video in videos:
@@ -96,6 +102,7 @@ def top_videos_by_category(videos: list[dict], categories: list[str]) -> dict[st
 
     return category_groups
 
+
 def avg_comments_popular_videos(videos: list[dict]) -> float:
 
     popular_videos = []
@@ -111,7 +118,8 @@ def avg_comments_popular_videos(videos: list[dict]) -> float:
 
 
 def video_filter_generator(videos: list[dict]) -> Iterator[tuple[str, int]]:
-    # Task 1.6 Write a generator that yields videos with comment count greater than 450,000 (must return title and views)
+    # Task 1.6 Write a generator that yields videos with comment count
+    # greater than 450,000 (must return title and views)
     for video in videos:
         if video['comment_count'] > 450_000:
             yield video['title'], video['comment_count']
